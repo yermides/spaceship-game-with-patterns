@@ -7,7 +7,8 @@ namespace Gameplay
 {
     public class Ship : MonoBehaviour
     {
-        [SerializeField] private float speed;
+        [SerializeField] private float horizontalSpeed;
+        [SerializeField] private float verticalSpeed;
         private Transform _transform;
         private Camera _camera;
         private IInputReceiver _inputReceiver;
@@ -41,37 +42,34 @@ namespace Gameplay
         {
             Vector2 direction = GetDirection();
             Move(direction);
-
-            if (_inputReceiver.GetRequestForFiring())
-            {
-                Fire();
-            }
+            Fire();
         }
 
         private void Move(Vector2 movement)
         {
-            Vector3 movement3d = new Vector3(movement.x, 0, movement.y) * (speed * Time.deltaTime);
+            Vector3 movement3d = new Vector3(movement.x, 0, movement.y) * (horizontalSpeed * Time.deltaTime);
             _transform.Translate(movement3d);
             CorrectMovementDegreeOfFreedom();
         }
 
         private void Fire()
         {
-            if (!shipFiringMediator) return;
+            if (!shipFiringMediator || !_inputReceiver.GetRequestForFiring()) return;
             
             shipFiringMediator.FireProjectile(_transform.position /* + Vector3.forward * 5.0f */, _transform.forward);
-            
-            // if (projectilePrefab)
-            // {
-            //     Instantiate(projectilePrefab, _transform.position, Quaternion.identity);
-            // }
         }
 
-        public IEnumerator FireCooldownCoroutine()
-        {
-            yield return new WaitForSeconds(0.25f);
-            CanFire = true;
-        }
+        // public void OnFiringResponse()
+        // {
+        //     CanFire = false;
+        //     StartCoroutine(FireCooldownCoroutine());
+        // }
+        //
+        // public IEnumerator FireCooldownCoroutine()
+        // {
+        //     yield return new WaitForSeconds(shipFiringMediator.FiringCooldownSeconds);
+        //     CanFire = true;
+        // }
 
         private void CorrectMovementDegreeOfFreedom()
         {
