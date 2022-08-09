@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 
 namespace Gameplay
 {
+    // [RequireComponent(typeof(Ship))]
     public class ShipFiringMediator : MonoBehaviour
     {
         [Header("Ship Reference")]
@@ -22,17 +23,43 @@ namespace Gameplay
         {
             get => firingCooldownSeconds;
         }
+        
+        public ProjectileEnumId ProjectileEnumId
+        {
+            get => projectileTypeToSpawn;
+            set => projectileTypeToSpawn = value;
+        }
 
         private void Awake()
+        {
+            _projectileFactory = new ProjectileFactory(projectileFactoryConfiguration);
+        }
+
+        private void Start()
         {
             if (!ship)
             {
                 ship = GetComponent<Ship>();
             }
 
-            _projectileFactory = new ProjectileFactory(projectileFactoryConfiguration);
             ship.Configure(this);
         }
+
+        public void Configure(ProjectileFactory projectileFactory)
+        {
+            _projectileFactory = projectileFactory;
+        }
+
+        public void Configure(Ship shipReference)
+        {
+            ship = shipReference;
+        }
+
+        public void Configure(ProjectileFactoryConfiguration projectileFactoryConfigurationParam)
+        {
+            projectileFactoryConfiguration = projectileFactoryConfigurationParam;
+            _projectileFactory = new ProjectileFactory(projectileFactoryConfiguration);
+        }            
 
         public void FireProjectile(Vector3 position, Vector3 direction)
         {

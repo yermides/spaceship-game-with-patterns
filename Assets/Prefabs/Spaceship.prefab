@@ -112,7 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3763830ef8d8474b81540ec198a1606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  horizontalSpeed: 0
+  verticalSpeed: 0
 --- !u!114 &1567228609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,8 +139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ship: {fileID: 3700432164556876614}
-  projectile: {fileID: 1911610011, guid: 5e83b57a1e0b67649b5aa9db446934dd, type: 3}
-  spawnOffset: 1
+  firingCooldownSeconds: 0.25
   projectileFactoryConfiguration: {fileID: 11400000, guid: 4999656a3721f7447a233dee3b349cf4,
     type: 2}
-  _projectileTypeToSpawn: 1
+  projectileTypeToSpawn: 0
+  spawnOffset: 1

@@ -13,10 +13,13 @@ namespace Gameplay
         [Header("Spawning Params")] 
         [SerializeField] private int shipsToSpawnCount;
         [SerializeField] private float secondsBetweenSpawn;
+        private ShipBuilder _shipBuilder;
         
         private void Awake()
         {
             _projectileFactory = new ProjectileFactory(projectileFactoryConfiguration);
+            // TODO:
+            // _shipBuilder = new ShipBuilder();
         }
 
         private IEnumerator SpawnShipCoroutine()

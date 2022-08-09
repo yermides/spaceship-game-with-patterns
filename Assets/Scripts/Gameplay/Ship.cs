@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 
 namespace Gameplay
 {
+    // [RequireComponent(typeof(ShipFiringMediator))]
     public class Ship : MonoBehaviour
     {
         [SerializeField] private float horizontalSpeed;
@@ -16,11 +17,25 @@ namespace Gameplay
         private ShipFiringMediator shipFiringMediator;
 
         public bool CanFire { get; set; } = true;
+        
+        public float speed
+        {
+            get => horizontalSpeed;
+            set => horizontalSpeed = value;
+        }
 
         private void Awake()
         {
             _camera = Camera.main;
             _transform = transform;
+        }
+
+        private void Start()
+        {
+            if (!shipFiringMediator)
+            {
+                shipFiringMediator = GetComponent<ShipFiringMediator>();
+            }
         }
 
         public void Configure(IInputReceiver inputReceiver)
