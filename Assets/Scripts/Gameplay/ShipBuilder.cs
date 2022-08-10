@@ -1,5 +1,7 @@
 using System;
+using Helpers;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Gameplay
 {
@@ -10,35 +12,52 @@ namespace Gameplay
     // [CreateAssetMenu(fileName = "ShipBuilder", menuName = "ScriptableObjects/ShipBuilder", order = 1)]
     public class ShipBuilder // : MonoBehaviour
     {
-        private Vector3 _position;
-        private Quaternion _rotation;
+        private Vector3 _position = Vector3.zero;
+        private Quaternion _rotation = Quaternion.identity;
         private ProjectileFactory _projectileFactory;
         private ProjectileEnumId _projectileEnumId;
         private IInputReceiver _inputReceiver;
         private IMovementConstrainer _movementConstrainer;
         private float _speed;
         private Vector2 _direction;
-        private Ship _prototypeShip;
+
+        private static Ship _prototypeShip;
+
+        public static Ship SharedPrototypeShip
+        {
+            get => _prototypeShip;
+            set => _prototypeShip = value;
+        }
 
         // private void Awake()
         // {
         //     this.WithPosition(Vector3.zero)
         //         .WithRotation(Quaternion.identity);
         // }
-        
+
+        public ShipBuilder()
+        {
+        }
+
         public ShipBuilder(ProjectileFactory projectileFactory)
         {
             this.WithPosition(Vector3.zero)
                 .WithRotation(Quaternion.identity)
                 .WithProjectileFactory(projectileFactory);
+
+            // It's a not-so-good idea to load from a resource that can change at anytime
+            // if (!SharedPrototypeShip)
+            // {
+            //     SharedPrototypeShip = Resources.Load<Ship>("Spaceship_template");
+            // }
         }
-        
+
         public ShipBuilder WithPosition(Vector3 position)
         {
             _position = position;
             return this;
         }
-        
+
         public ShipBuilder WithRotation(Quaternion rotation)
         {
             _rotation = rotation;
@@ -73,7 +92,7 @@ namespace Gameplay
 
         public ShipBuilder WithProjectileFactory(ProjectileFactory projectileFactory)
         {
-            _projectileFactory = projectileFactory;            
+            _projectileFactory = projectileFactory;
             return this;
         }
 
@@ -91,20 +110,46 @@ namespace Gameplay
 
         public Ship Build()
         {
-            // TODO: it works but pls clean this mess
-            GameObject generatedShipObject = GameObject.CreatePrimitive(PrimitiveType.Capsule); // new GameObject();
+            if (SharedPrototypeShip)
+            {
+                return BuildUsingPrototype();
+            }
+            else
+            {
+                return BuildFromScratch();
+            }
+        }
+
+        private Ship BuildUsingPrototype()
+        {
+            Ship generatedShip = Object.Instantiate(_prototypeShip, _position, _rotation);
+            ShipFiringMediator shipFiringMediator = generatedShip.GetComponent<ShipFiringMediator>();
             
+            shipFiringMediator.ProjectileEnumId = _projectileEnumId;
+            
+            // TODO: it's really the same, except we use pre-existing components instead of adding them one-by-one
+            // so code can be simplified
+            
+            return generatedShip;
+        }
+
+        private Ship BuildFromScratch()
+        {
+            // TODO: it works but pls clean this mess
+            GameObject generatedShipObject = GameObject.CreatePrimitive(PrimitiveType.Cube); // new GameObject();
+
             Ship generatedShip = generatedShipObject.AddComponent<Ship>();
+            ShipFiringMediator shipFiringMediator = generatedShipObject.AddComponent<ShipFiringMediator>();
+            
             generatedShip.speed = _speed;
             generatedShip.Configure(new FreeMovementStrategy());
             generatedShip.Configure(new UnityInputAdapter());
             // generatedShip.Configure(new AIInputAdapter(generatedShip));
-            
-            ShipFiringMediator shipFiringMediator = generatedShipObject.AddComponent<ShipFiringMediator>();
+
             shipFiringMediator.ProjectileEnumId = _projectileEnumId;
             shipFiringMediator.Configure(_projectileFactory);
             shipFiringMediator.Configure(generatedShip);
-            
+
             // shipFiringMediator.Configure(proje);
             // shipFiringMediator.FiringCooldownSeconds
 

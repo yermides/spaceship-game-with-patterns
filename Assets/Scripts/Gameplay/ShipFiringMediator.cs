@@ -69,7 +69,7 @@ namespace Gameplay
             // Projectile applied response
             Projectile projectile = _projectileFactory.Create(projectileTypeToSpawn);
             projectile.Configure(this);
-            projectile.Position = position;
+            projectile.Position = position + (direction.normalized * spawnOffset);
             projectile.Direction = direction;
             
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), ship.GetComponent<Collider>());

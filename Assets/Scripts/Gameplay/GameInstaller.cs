@@ -12,22 +12,19 @@ namespace Gameplay
         private void Awake()
         {
             _projectileFactory = new ProjectileFactory(_projectileFactoryConfiguration);
-            _shipBuilder = new ShipBuilder(_projectileFactory);
-
-            _shipBuilder
+            _shipBuilder = new ShipBuilder()
                 .WithPosition(Vector3.zero)
                 .WithRotation(Quaternion.identity)
                 .WithSpeed(10)
                 .WithInputReceiver(new UnityInputAdapter())
                 .WithProjectileType(ProjectileEnumId.Basic)
-                .WithProjectileFactory(_projectileFactory)
-                ;
+                .WithProjectileFactory(_projectileFactory);
         }
 
         private void Update()
         {
             // Test, spawn on key press
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 _shipBuilder.Build();
             }

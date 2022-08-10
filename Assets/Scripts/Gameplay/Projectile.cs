@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Helpers;
 using Tags;
 using UnityEngine;
 
@@ -54,10 +55,13 @@ namespace Gameplay
 
         private void OnCollisionEnter(Collision collision)
         {
-            GameObject other = collision.gameObject;
+            #if UNITY_EDITOR
             Debug.Log("I collided with other");
+            #endif
+            
+            GameObject other = collision.gameObject;
 
-            if (other.TryGetComponent(out TagEnemy _))
+            if (other.HasComponent<TagEnemy>())
             { 
                 // Maybe notify impact to the player ship
                 // shipFiringMediator.TriggerEnemyHitEvent(); or something
