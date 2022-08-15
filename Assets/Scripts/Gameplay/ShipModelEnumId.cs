@@ -2,7 +2,11 @@ namespace Gameplay
 {
     public enum ShipModelEnumId
     {
-        Base,
-        Aerodynamic
+        ShipModel1,
+        ShipModel2,
+        ShipModel3,
+        ShipModel4,
+        ShipModel5,
+        ShipModel6
     };
 }

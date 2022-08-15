@@ -53,11 +53,11 @@ namespace Gameplay
             return this;
         }
 
-        public ShipBuilder WithModel(ShipModelEnumId id)
-        {
-            throw new NotImplementedException("TODO: use different models");
-            // return this;
-        }
+        // public ShipBuilder WithModel(ShipModelEnumId id)
+        // {
+        //     throw new NotImplementedException("TODO: use different models");
+        //     // return this;
+        // }
 
         // Todo: what was I supposed to do with this one?
         // I'd rather build the entire ship not from a prefab or have a prefab skeleton?
@@ -123,6 +123,15 @@ namespace Gameplay
             shipFiringMediator.ProjectileEnumId = _projectileEnumId;
             
             ConfigureShip(generatedShip, shipFiringMediator);
+
+            Transform shipTransform = generatedShip.transform;
+
+            if (shipTransform.childCount == 1)
+            {
+                Object.Destroy(shipTransform.GetChild(0).gameObject);
+            }
+
+            GameObject shipModel = _shipModelFactory.Create(_shipModelEnumId, shipTransform);
             
             return generatedShip;
         }
@@ -151,6 +160,8 @@ namespace Gameplay
         }
     }
 }
+
+#region old stuff
 
 // TODO: implement all methods & use
 // It'll be a monobehaviour since I'd like to serialize them as prefabs to later have
@@ -182,3 +193,4 @@ namespace Gameplay
 //     //     SharedPrototypeShip = Resources.Load<Ship>("Spaceship_template");
 //     // }
 // }
+#endregion

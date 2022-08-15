@@ -16,5 +16,10 @@ namespace Gameplay
         {
             return Object.Instantiate(_configuration.GetPrefabById(id));
         }
+        
+        public GameObject Create(ShipModelEnumId id, Transform parent)
+        {
+            return Object.Instantiate(_configuration.GetPrefabById(id), parent);
+        }
     }
 }

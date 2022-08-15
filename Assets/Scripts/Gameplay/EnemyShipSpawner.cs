@@ -11,6 +11,9 @@ namespace Gameplay
         [SerializeField] private ProjectileFactoryConfiguration projectileFactoryConfiguration;
         private ProjectileFactory _projectileFactory;
 
+        [SerializeField] ShipModelFactoryConfiguration shipModelFactoryConfiguration;
+        private ShipModelFactory _shipModelFactory;
+
         [Header("Spawning Params")] 
         [SerializeField] private int shipsToSpawnCount;
         [SerializeField] private float secondsBetweenSpawn;
@@ -22,15 +25,18 @@ namespace Gameplay
         private void Awake()
         {
             _enemies = new List<Ship>();
-            
             Quaternion facingPlayerOrientation = Quaternion.Euler(new Vector3(0, 180, 0));
             
             _projectileFactory = new ProjectileFactory(projectileFactoryConfiguration);
-            _shipBuilder = new ShipBuilder()
+            _shipModelFactory = new ShipModelFactory(shipModelFactoryConfiguration);
+
+            // _shipBuilder = new ShipBuilder()
+            _shipBuilder = new ShipBuilder(_projectileFactory, _shipModelFactory)
                     .WithPosition(Vector3.forward * 4.0f)
                     .WithRotation(facingPlayerOrientation)
                     .WithSpeed(2.5f)
-                    .WithProjectileFactory(_projectileFactory)
+                    .WithShipModelEnumId(ShipModelEnumId.ShipModel2)
+                    // .WithProjectileFactory(_projectileFactory)
                     .WithProjectileType(ProjectileEnumId.Basic)
                     .WithPrototypePrefab(shipPrototypePrefab)
                     .WithInputReceiver(new UnityInputAdapter())
