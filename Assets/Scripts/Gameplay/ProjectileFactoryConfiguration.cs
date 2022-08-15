@@ -5,10 +5,7 @@ using RotaryHeart.Lib.SerializableDictionary;
 namespace Gameplay
 {
     // [Serializable] public class IntToProjectileDictionary : SerializableDictionaryBase<int, Projectile> { }
-    [Serializable]
-    public class IdToProjectileDictionary : SerializableDictionaryBase<ProjectileEnumId, Projectile>
-    {
-    }
+    [Serializable] public class IdToProjectileDictionary : SerializableDictionaryBase<ProjectileEnumId, Projectile> { }
     
     [CreateAssetMenu(fileName = "ProjectileFactoryConfiguration", menuName = "ScriptableObjects/ProjectileFactoryConfiguration", order = 1)]
     public class ProjectileFactoryConfiguration : ScriptableObject

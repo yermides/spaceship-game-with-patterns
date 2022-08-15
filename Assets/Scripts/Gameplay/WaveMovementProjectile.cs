@@ -5,7 +5,7 @@ namespace Gameplay
 {
     public class WaveMovementProjectile : Projectile
     {
-        [SerializeField] private float maxArcValue = 1.0f;
+        // [SerializeField] private float maxArcValue = 1.0f;
         private Vector3 _initialPosition;
         
         private void Start()

@@ -5,51 +5,34 @@ using Object = UnityEngine.Object;
 
 namespace Gameplay
 {
-    // TODO: implement all methods & use
-    // It'll be a monobehaviour since I'd like to serialize them as prefabs to later have
-    // a factory of ShipBuilders which I'd use directly to get the preconfigured builder (?)
-
-    // [CreateAssetMenu(fileName = "ShipBuilder", menuName = "ScriptableObjects/ShipBuilder", order = 1)]
-    public class ShipBuilder // : MonoBehaviour
+    public class ShipBuilder
     {
+        // Transform values
         private Vector3 _position = Vector3.zero;
         private Quaternion _rotation = Quaternion.identity;
+        
+        // Projectiles factory info
         private ProjectileFactory _projectileFactory;
         private ProjectileEnumId _projectileEnumId;
+
+        // Ship movement
         private IInputReceiver _inputReceiver;
         private IMovementConstrainer _movementConstrainer;
         private float _speed;
         private Vector2 _direction;
+        
+        // Ship construction
+        private Ship _prototypeShip;
+        private ShipModelFactory _shipModelFactory;
+        private ShipModelEnumId _shipModelEnumId;
 
-        private static Ship _prototypeShip;
+        // I should really use the latter constructor
+        public ShipBuilder() { }
 
-        public static Ship SharedPrototypeShip
+        public ShipBuilder(ProjectileFactory projectileFactory, ShipModelFactory shipModelFactory)
         {
-            get => _prototypeShip;
-            set => _prototypeShip = value;
-        }
-
-        // private void Awake()
-        // {
-        //     this.WithPosition(Vector3.zero)
-        //         .WithRotation(Quaternion.identity);
-        // }
-
-        public ShipBuilder()
-        {
-        }
-
-        public ShipBuilder(ProjectileFactory projectileFactory)
-        {
-            this.WithPosition(Vector3.zero)
-                .WithRotation(Quaternion.identity)
-                .WithProjectileFactory(projectileFactory);
-
-            // It's a not-so-good idea to load from a resource that can change at anytime
-            // if (!SharedPrototypeShip)
-            // {
-            //     SharedPrototypeShip = Resources.Load<Ship>("Spaceship_template");
-            // }
+            _projectileFactory = projectileFactory;
+            _shipModelFactory = shipModelFactory;
         }
 
         public ShipBuilder WithPosition(Vector3 position)
@@ -70,7 +53,7 @@ namespace Gameplay
             return this;
         }
 
-        public ShipBuilder WithModel(int id)
+        public ShipBuilder WithModel(ShipModelEnumId id)
         {
             throw new NotImplementedException("TODO: use different models");
             // return this;
@@ -78,7 +61,7 @@ namespace Gameplay
 
         // Todo: what was I supposed to do with this one?
         // I'd rather build the entire ship not from a prefab or have a prefab skeleton?
-        public ShipBuilder FromPrefab(Ship ship)
+        public ShipBuilder WithPrototypePrefab(Ship ship)
         {
             _prototypeShip = ship;
             return this;
@@ -96,6 +79,19 @@ namespace Gameplay
             return this;
         }
 
+        public ShipBuilder WithShipModelFactory(ShipModelFactory factory)
+        {
+            _shipModelFactory = factory;
+            return this;
+        }
+        
+        public ShipBuilder WithShipModelEnumId(ShipModelEnumId id)
+        {
+            _shipModelEnumId = id;
+            return this;
+        }
+
+        // TODO: these cannot be passed so easily, I'd need to map id's to interfaces with a switch or something during building
         public ShipBuilder WithInputReceiver(IInputReceiver inputReceiver)
         {
             _inputReceiver = inputReceiver;
@@ -110,7 +106,7 @@ namespace Gameplay
 
         public Ship Build()
         {
-            if (SharedPrototypeShip)
+            if (_prototypeShip)
             {
                 return BuildUsingPrototype();
             }
@@ -124,23 +120,26 @@ namespace Gameplay
         {
             Ship generatedShip = Object.Instantiate(_prototypeShip, _position, _rotation);
             ShipFiringMediator shipFiringMediator = generatedShip.GetComponent<ShipFiringMediator>();
-            
             shipFiringMediator.ProjectileEnumId = _projectileEnumId;
             
-            // TODO: it's really the same, except we use pre-existing components instead of adding them one-by-one
-            // so code can be simplified
+            ConfigureShip(generatedShip, shipFiringMediator);
             
             return generatedShip;
         }
 
         private Ship BuildFromScratch()
         {
-            // TODO: it works but pls clean this mess
             GameObject generatedShipObject = GameObject.CreatePrimitive(PrimitiveType.Cube); // new GameObject();
-
             Ship generatedShip = generatedShipObject.AddComponent<Ship>();
             ShipFiringMediator shipFiringMediator = generatedShipObject.AddComponent<ShipFiringMediator>();
             
+            ConfigureShip(generatedShip, shipFiringMediator);
+
+            return generatedShip;
+        }
+
+        private void ConfigureShip(Ship generatedShip, ShipFiringMediator shipFiringMediator)
+        {
             generatedShip.speed = _speed;
             generatedShip.Configure(new FreeMovementStrategy());
             generatedShip.Configure(new UnityInputAdapter());
@@ -149,11 +148,37 @@ namespace Gameplay
             shipFiringMediator.ProjectileEnumId = _projectileEnumId;
             shipFiringMediator.Configure(_projectileFactory);
             shipFiringMediator.Configure(generatedShip);
-
-            // shipFiringMediator.Configure(proje);
-            // shipFiringMediator.FiringCooldownSeconds
-
-            return generatedShip;
         }
     }
 }
+
+// TODO: implement all methods & use
+// It'll be a monobehaviour since I'd like to serialize them as prefabs to later have
+// a factory of ShipBuilders which I'd use directly to get the preconfigured builder (?)
+
+// [CreateAssetMenu(fileName = "ShipBuilder", menuName = "ScriptableObjects/ShipBuilder", order = 1)]
+
+// public Ship SharedPrototypeShip
+// {
+//     get => _prototypeShip;
+//     set => _prototypeShip = value;
+// }
+
+// private void Awake()
+// {
+//     this.WithPosition(Vector3.zero)
+//         .WithRotation(Quaternion.identity);
+// }
+
+// public ShipBuilder(ProjectileFactory projectileFactory)
+// {
+//     this.WithPosition(Vector3.zero)
+//         .WithRotation(Quaternion.identity)
+//         .WithProjectileFactory(projectileFactory);
+//
+//     // It's a not-so-good idea to load from a resource that can change at anytime
+//     // if (!SharedPrototypeShip)
+//     // {
+//     //     SharedPrototypeShip = Resources.Load<Ship>("Spaceship_template");
+//     // }
+// }

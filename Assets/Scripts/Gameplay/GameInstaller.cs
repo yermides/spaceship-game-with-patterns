@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Gameplay
 {
@@ -7,18 +8,23 @@ namespace Gameplay
     {
         private ShipBuilder _shipBuilder;
         private ProjectileFactory _projectileFactory;
-        [SerializeField] private ProjectileFactoryConfiguration _projectileFactoryConfiguration;
+        [SerializeField] private ProjectileFactoryConfiguration projectileFactoryConfiguration;
+        [SerializeField] private Ship shipPrototypePrefab;
         
         private void Awake()
         {
-            _projectileFactory = new ProjectileFactory(_projectileFactoryConfiguration);
+            // ShipBuilder.SharedPrototypeShip = shipPrototypePrefab;
+            
+            _projectileFactory = new ProjectileFactory(projectileFactoryConfiguration);
             _shipBuilder = new ShipBuilder()
                 .WithPosition(Vector3.zero)
                 .WithRotation(Quaternion.identity)
                 .WithSpeed(10)
-                .WithInputReceiver(new UnityInputAdapter())
+                .WithProjectileFactory(_projectileFactory)
                 .WithProjectileType(ProjectileEnumId.Basic)
-                .WithProjectileFactory(_projectileFactory);
+                .WithPrototypePrefab(shipPrototypePrefab)
+                .WithInputReceiver(new UnityInputAdapter())
+                ;
         }
 
         private void Update()
