@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 4067de1a02072244798361060c5e7325, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -570,7 +570,7 @@ Camera:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -2065,6 +2065,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 215486681}
     m_Modifications:
+    - target: {fileID: 3700432164556876613, guid: b9c8436415791f04ab4d802c718d8cc2,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3700432164556876613, guid: b9c8436415791f04ab4d802c718d8cc2,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.91
+      objectReference: {fileID: 0}
+    - target: {fileID: 3700432164556876613, guid: b9c8436415791f04ab4d802c718d8cc2,
+        type: 3}
+      propertyPath: m_Center.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3700432164556876618, guid: b9c8436415791f04ab4d802c718d8cc2,
         type: 3}
       propertyPath: m_RootOrder
