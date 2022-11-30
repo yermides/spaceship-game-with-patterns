@@ -5,15 +5,15 @@ namespace Code.Input
 {
     public class AIInputAdapter : IInputAdapter
     {
-        private readonly Ship _ship;
+        private readonly ShipMediator _shipMediator;
         private readonly Transform _shipTransform;
         private readonly Camera _camera;
         private float _currentDirectionX = -1;
 
-        public AIInputAdapter(Ship ship)
+        public AIInputAdapter(ShipMediator shipMediator)
         {
-            _ship = ship;
-            _shipTransform = _ship.transform;
+            _shipMediator = shipMediator;
+            _shipTransform = _shipMediator.transform;
             _camera = Camera.main;
         }
         
@@ -33,6 +33,12 @@ namespace Code.Input
             }
 
             return new Vector3(_currentDirectionX, 0, 0);
+        }
+
+        public bool DidRequestToFire()
+        {
+            return false;
+            // return Random.Range(0, 100) < 20;
         }
     }
 }

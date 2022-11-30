@@ -1,22 +1,34 @@
 using Code.Input;
+using Code.Ships.CheckLimits;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.Ships
 {
+    public enum ShipInputMethod
+    {
+        UseUnityInput,
+        UseAIInput
+    }
+
     public class ShipInstaller : MonoBehaviour
     {
-        [SerializeField] private Ship shipReference;
-        [SerializeField] private bool useUnityInput = true;
+        [FormerlySerializedAs("shipReference")] [SerializeField] private ShipMediator shipMediatorReference;
+        [SerializeField] private ShipInputMethod shipInputMethod;
 
         private void Awake()
         {
-            if (useUnityInput)
+            if (shipInputMethod == ShipInputMethod.UseUnityInput)
             {
-                shipReference.Set(new UnityInputAdapter());
+                shipMediatorReference.Configure(
+                    new UnityInputAdapter(), 
+                    new ViewportLimitChecker(shipMediatorReference.transform));
             }
-            else
+            else if(shipInputMethod == ShipInputMethod.UseAIInput)
             {
-                shipReference.Set(new AIInputAdapter(shipReference));
+                shipMediatorReference.Configure(
+                    new AIInputAdapter(shipMediatorReference),
+                    new InitialPositionLimitChecker(shipMediatorReference.transform, 5.0f));
             }
         }
     }
