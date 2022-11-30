@@ -3,16 +3,20 @@ using Code.Input;
 using Code.Ships.CheckLimits;
 using Code.Ships.Weapons;
 using UnityEngine;
+using NaughtyAttributes;
 
 namespace Code.Ships
 {
     [SelectionBase]
     public class ShipMediator : MonoBehaviour, IShip
     {
+        [SerializeField, Expandable] private ShipId id;
         [SerializeField] private MovementController movementController;
         [SerializeField] private WeaponController weaponController;
         private Transform _transform;
         private IInputAdapter _inputAdapter;
+        
+        public string Id => id.Value;
 
         private void Awake()
         {

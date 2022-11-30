@@ -28,7 +28,9 @@ namespace Code.Ships
             {
                 shipMediatorReference.Configure(
                     new AIInputAdapter(shipMediatorReference),
-                    new InitialPositionLimitChecker(shipMediatorReference.transform, 5.0f));
+                    new ViewportLimitChecker(shipMediatorReference.transform)
+                    // new InitialPositionLimitChecker(shipMediatorReference.transform, 5.0f)
+                    );
             }
         }
     }

@@ -25,11 +25,11 @@ namespace Code.Input
 
             if (viewpoint.x < viewThreshold)
             {
-                _currentDirectionX = 1;
+                _currentDirectionX = _shipTransform.right.x;
             }
             else if (viewpoint.x > 1.0f - viewThreshold)
             {
-                _currentDirectionX = -1;
+                _currentDirectionX = -_shipTransform.right.x;
             }
 
             return new Vector3(_currentDirectionX, 0, 0);

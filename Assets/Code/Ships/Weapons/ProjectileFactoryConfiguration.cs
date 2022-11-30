@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Code.Ships.Weapons
 {
-    [CreateAssetMenu]
+    [CreateAssetMenu(menuName = "ShipGame/ProjectileFactoryConfiguration")]
     public class ProjectileFactoryConfiguration : ScriptableObject
     {
         [SerializeField] private ProjectileBehaviour[] projectiles;

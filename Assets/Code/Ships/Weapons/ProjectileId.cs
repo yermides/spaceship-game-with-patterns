@@ -3,7 +3,7 @@ using NaughtyAttributes;
 
 namespace Code.Ships.Weapons
 {
-    [CreateAssetMenu]
+    [CreateAssetMenu(menuName = "ShipGame/ProjectileId")]
     public class ProjectileId : ScriptableObject
     {
         [SerializeField, Tag, Label("Projectile Id Value")] 
@@ -11,5 +11,4 @@ namespace Code.Ships.Weapons
         
         public string Value => id;
     }
-
 }
