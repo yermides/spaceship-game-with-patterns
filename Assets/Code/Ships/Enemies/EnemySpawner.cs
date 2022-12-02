@@ -1,4 +1,3 @@
-using System;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -6,6 +5,8 @@ namespace Code.Ships.Enemies
 {
     public class EnemySpawner : MonoBehaviour
     {
+        [SerializeField] private Transform[] possibleSpawnPoints;
+        
         [SerializeField, Expandable, AllowNesting] 
         private LevelConfiguration levelConfiguration;
         
@@ -41,7 +42,26 @@ namespace Code.Ships.Enemies
         {
             foreach (var shipToSpawnConfiguration in enemyWave.ShipToSpawnConfiguration)
             {
-                _shipFactory.Create(shipToSpawnConfiguration.ShipId, shipToSpawnConfiguration.Position, Quaternion.identity);
+                var spawnPointIndex = Random.Range(0, possibleSpawnPoints.Length);
+                var spawnPoint = possibleSpawnPoints[spawnPointIndex];
+                
+                var shipBuilder = _shipFactory.Create(
+                    shipToSpawnConfiguration.ShipId, 
+                    spawnPoint.position, 
+                    spawnPoint.rotation
+                );
+
+                shipBuilder.WithConfiguration(shipToSpawnConfiguration)
+                    .WithInputStrategy(ShipInputStrategy.UseAIInput)
+                    .WithCheckLimitsStrategy(ShipCheckLimitsStrategy.ViewportLimitChecker)
+                    .Build();
+                
+                // preConfiguredBuilder
+                //     .WithInputStrategy(ShipInputStrategy.UseUnityInput)
+                //     .WithCheckLimitsStrategy(Ship)
+                    
+                // shipToSpawnConfiguration.Position, 
+                // Quaternion.identity
             }
         }
     }

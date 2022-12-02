@@ -25,9 +25,11 @@ namespace Code.Ships.Weapons
             _projectileFactory = new ProjectileFactory(Instantiate(projectileFactoryConfiguration));
         }
 
-        public void Configure(IShip ship)
+        public void Configure(IShip ship, float desiredFireRate, ProjectileId defaultProjectileId)
         {
             _ship = ship;
+            fireRate = desiredFireRate;
+            currentSelectedProjectileId = defaultProjectileId.Value;
         }
 
         private IEnumerator FiringCooldownCoroutine()

@@ -30,11 +30,18 @@ namespace Code.Ships
             TryFiring();
         }
 
-        public void Configure(IInputAdapter inputAdapter, ILimitChecker limitChecker)
+        // public void Configure(IInputAdapter inputAdapter, ILimitChecker limitChecker)
+        // {
+        //     _inputAdapter = inputAdapter;
+        //     movementController.Configure(this, limitChecker);
+        //     weaponController.Configure(this);
+        // }
+        
+        public void Configure(ShipConfiguration shipConfiguration)
         {
-            _inputAdapter = inputAdapter;
-            movementController.Configure(this, limitChecker);
-            weaponController.Configure(this);
+            _inputAdapter = shipConfiguration.InputAdapter;
+            movementController.Configure(this, shipConfiguration.LimitChecker, shipConfiguration.Speed);
+            weaponController.Configure(this, shipConfiguration.FireRate, shipConfiguration.DefaultProjectileId);
         }
 
         private void TryFiring()
@@ -44,5 +51,6 @@ namespace Code.Ships
                 weaponController.TryFiring();
             }
         }
+
     }
 }

@@ -11,16 +11,21 @@ namespace Code.Ships
             _configuration = configuration;
         }
 
-        public ShipMediator Create(string id)
+        public ShipBuilder Create(string id)
         {
-            var projectilePrefab = _configuration.GetProjectileById(id);
-            return Object.Instantiate(projectilePrefab);
+            return Create(id, Vector3.zero, Quaternion.identity);
         }
         
-        public ShipMediator Create(string id, Vector3 position, Quaternion rotation)
+        public ShipBuilder Create(string id, Vector3 position, Quaternion rotation)
         {
             var projectilePrefab = _configuration.GetProjectileById(id);
-            return Object.Instantiate(projectilePrefab, position, rotation);
+            // var projectileInstance = Object.Instantiate(projectilePrefab, position, rotation);
+            var shipBuilder = new ShipBuilder()
+                .FromPrefab(projectilePrefab)
+                .WithPosition(position)
+                .WithRotation(rotation);
+            
+            return shipBuilder;
         }
     }
 }

@@ -37,7 +37,8 @@ namespace Code.Input
 
         public bool DidRequestToFire()
         {
-            return false;
+            // Always tries to fire
+            return true;
             // return Random.Range(0, 100) < 20;
         }
     }
