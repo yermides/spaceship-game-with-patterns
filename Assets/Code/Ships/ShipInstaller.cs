@@ -1,5 +1,6 @@
 using Code.Input;
 using Code.Ships.CheckLimits;
+using Code.Ships.Common;
 using Code.Ships.Enemies;
 using NaughtyAttributes;
 using UnityEngine;
@@ -36,11 +37,13 @@ namespace Code.Ships
             
             _shipBuilder = shipFactory
                 .Create(shipConfiguration.ShipId)
+                .WithTeam(Teams.Ally)
                 .WithConfiguration(shipConfiguration);
+
             SetInput(_shipBuilder);
             SetCheckLimitsStrategy(_shipBuilder);
 
-            BuildShip();
+            // BuildPlayerShip();
         }
         
         private void SetInput(ShipBuilder shipBuilder)
@@ -54,14 +57,14 @@ namespace Code.Ships
         }
 
         [Button("Build Ship (Only for Play Mode testing)")]
-        private void BuildShip()
+        public void BuildPlayerShip()
         {
             _playerShip = _shipBuilder.Build();
         }
         
         [Button("Destroy Ship (Only for Play Mode testing)")]
         
-        private void DestroyShip()
+        public void DestroyPlayerShip()
         {
             if (!_playerShip) return;
             

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3341935305467609166}
   - component: {fileID: 3341935305467609161}
   - component: {fileID: 3341935305467609160}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1847904146}
   - component: {fileID: 722547571213986746}
   - component: {fileID: 6608365470190619654}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Projectile 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3341935306218280172}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 2}

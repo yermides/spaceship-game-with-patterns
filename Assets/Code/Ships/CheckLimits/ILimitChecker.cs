@@ -1,7 +1,9 @@
+using UnityEngine;
+
 namespace Code.Ships.CheckLimits
 {
     public interface ILimitChecker
     {
-        void ClampFinalPosition();
+        Vector3 ClampFinalPosition(Vector3 positionToClamp);
     }
 }

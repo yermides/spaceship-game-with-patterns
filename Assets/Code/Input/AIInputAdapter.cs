@@ -25,21 +25,20 @@ namespace Code.Input
 
             if (viewpoint.x < viewThreshold)
             {
-                _currentDirectionX = _shipTransform.right.x;
+                _currentDirectionX = -_shipTransform.right.x;
             }
             else if (viewpoint.x > 1.0f - viewThreshold)
             {
-                _currentDirectionX = -_shipTransform.right.x;
+                _currentDirectionX = _shipTransform.right.x;
             }
 
-            return new Vector3(_currentDirectionX, 0, 0);
+            return new Vector3(_currentDirectionX, 0, -1);
         }
 
         public bool DidRequestToFire()
         {
             // Always tries to fire
             return true;
-            // return Random.Range(0, 100) < 20;
         }
     }
 }

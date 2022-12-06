@@ -1,6 +1,8 @@
 using System;
 using Code.Ships;
 using Code.Ships.Enemies;
+using Code.UI;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Code.Battle
@@ -9,16 +11,25 @@ namespace Code.Battle
     {
         [SerializeField] private ShipInstaller shipInstaller;
         [SerializeField] private EnemySpawner enemySpawner;
-        // [SerializeField] private MenuController menuController;
+        [SerializeField] private ScreenFader screenFader;
 
-        private void StartBattle()
+        [Button("Start Battle (Only for Play Mode testing)")]
+
+        public void StartBattle()
         {
-            throw new NotImplementedException();
+            ScoreView.Instance.Reset();
+            shipInstaller.BuildPlayerShip();
+            enemySpawner.StartSpawn();
+            screenFader.Hide();
         }
 
-        private void StopBattle()
+        [Button("Stop Battle (Only for Play Mode testing)")]
+
+        public void StopBattle()
         {
-            throw new NotImplementedException();
+            shipInstaller.DestroyPlayerShip();
+            enemySpawner.StopSpawnAndReset();
+            screenFader.Show();
         }
     }
 }

@@ -15,19 +15,19 @@ namespace Code.Ships.CheckLimits
             _maxDistance = maxDistance;
         }
         
-        public void ClampFinalPosition()
+        public Vector3 ClampFinalPosition(Vector3 positionToClamp)
         {
-            var currentPosition = _transform.position;
+            var currentPosition = positionToClamp;
             var finalPosition = currentPosition;
             var distance = Mathf.Abs(currentPosition.x - _initialPosition.x);
 
-            if (distance <= _maxDistance) return;
+            if (distance <= _maxDistance) return positionToClamp;
 
             // Check whether is left or right bound
             var distanceToAdd = currentPosition.x > _initialPosition.x ? _maxDistance : -_maxDistance;
 
             finalPosition.x = _initialPosition.x + distanceToAdd;
-            _transform.position = finalPosition;
+            return finalPosition;
         }
     }
 }

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7e45e8bd824df786c29b59e1673fd7, type: 3}
+  m_Name: ProjectileFactoryConfiguration_Default
+  m_EditorClassIdentifier: 
+  projectiles:
+  - {fileID: 6608365470190619654, guid: b36e0f291d1994a4781167a7021d4927, type: 3}
+  - {fileID: 6608365470190619654, guid: 9603f2c4cd5d12f4eb87884d3786f8e2, type: 3}
+  - {fileID: 6608365470190619654, guid: 770e36e89e6e9314bbddcfc0919d9c6e, type: 3}
+  idProjectileBehavioursDictionary:
+    pairs:
+    - key: {fileID: 11400000, guid: 16ff1f6afeb5878458c2bc9092111d7c, type: 2}
+      value: {fileID: 6608365470190619654, guid: b36e0f291d1994a4781167a7021d4927,
+        type: 3}
+    - key: {fileID: 11400000, guid: 5aa4f70f89b21e84692749cf9fed40e3, type: 2}
+      value: {fileID: 6608365470190619654, guid: 9603f2c4cd5d12f4eb87884d3786f8e2,
+        type: 3}
+    - key: {fileID: 11400000, guid: a2325d9554879214b990c4cc4e6a3028, type: 2}
+      value: {fileID: 6608365470190619654, guid: 770e36e89e6e9314bbddcfc0919d9c6e,
+        type: 3}
+    error: 0

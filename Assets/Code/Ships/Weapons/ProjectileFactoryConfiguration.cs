@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Code.Ships.Weapons.Projectiles;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Code.Ships.Weapons
@@ -9,6 +10,8 @@ namespace Code.Ships.Weapons
     {
         [SerializeField] private ProjectileBehaviour[] projectiles;
         private Dictionary<string, ProjectileBehaviour> _idToProjectileDictionary;
+        
+        [SerializeField] SerializedDictionary<ProjectileId, ProjectileBehaviour> idProjectileBehavioursDictionary;
 
         private void Awake()
         {
@@ -24,6 +27,12 @@ namespace Code.Ships.Weapons
         {
             // TODO: handle the error if not found
             return _idToProjectileDictionary[id];
+        }
+        
+        public ProjectileBehaviour GetProjectileById(ProjectileId id)
+        {
+            // TODO: handle the error if not found
+            return idProjectileBehavioursDictionary[id];
         }
     }
 }
