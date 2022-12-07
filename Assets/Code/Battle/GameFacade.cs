@@ -31,5 +31,12 @@ namespace Code.Battle
             enemySpawner.StopSpawnAndReset();
             screenFader.Show();
         }
+
+        public void EndBattle()
+        {
+            // same as stop, but doesn't show the view back
+            shipInstaller.DestroyPlayerShip();
+            enemySpawner.StopSpawnAndReset();
+        }
     }
 }

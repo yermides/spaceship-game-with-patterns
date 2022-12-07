@@ -1,4 +1,5 @@
 using System;
+using Code.Common;
 using Code.Input;
 using Code.Ships.CheckLimits;
 using Code.Ships.Common;
@@ -60,7 +61,6 @@ namespace Code.Ships
             TryFiring();
         }
 
-
         private void TryFiring()
         {
             if (_inputAdapter.DidRequestToFire())
@@ -73,8 +73,14 @@ namespace Code.Ships
         {
             if (!hasDied) return;
             
-            ScoreView.Instance.AddScore(_team, _score);
+            // ScoreView.Instance.AddScore(_team, _score);
+            EventQueue.Instance.EnqueueEvent(new ShipDestroyedEvent(_team, _score, GetInstanceID()));
             Destroy(gameObject);
+
+            if (_team == Teams.Ally)
+            {
+                GameOverView.Instance.Show();
+            }
         }
     }
 }
