@@ -18,7 +18,8 @@ namespace Code.Ships.CheckLimits
             
             var viewpoint = _camera.WorldToViewportPoint(positionToClamp);
             viewpoint.x = Mathf.Clamp(viewpoint.x, margin, 1.0f - margin);
-            viewpoint.y = Mathf.Clamp(viewpoint.y, margin, 1.0f - margin);
+            // viewpoint.y = Mathf.Clamp(viewpoint.y, margin, 1.0f - margin);
+            viewpoint.y = Mathf.Clamp(viewpoint.y, 0.0f, 1.03f);
             return _camera.ViewportToWorldPoint(viewpoint);
             // _transform.position = _camera.ViewportToWorldPoint(viewpoint);
         }

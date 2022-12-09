@@ -3,7 +3,10 @@ namespace Code.Common
     public enum EventId
     {
         ShipDestroyed,
-        GameOverShown,
+        ShipSpawned,
+        AllShipsSpawned,
+        GameOver,
+        Victory,
         // etc
     }
 }

@@ -1,4 +1,5 @@
 using Code.Input;
+using Code.Ships.CheckDestroyLimits;
 using Code.Ships.CheckLimits;
 using Code.Ships.Enemies;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Code.Ships.Common
         private Quaternion _rotation;
         private ShipInputStrategy _inputStrategy;
         private ShipCheckLimitsStrategy _checkLimitsStrategy;
+        private ShipCheckDestroyLimitsStrategy _checkDestroyLimitsStrategy;
         private ShipToSpawnConfiguration _shipToSpawnConfiguration;
         private int _health = 3;
         private Teams _team;
@@ -65,6 +67,12 @@ namespace Code.Ships.Common
             _checkLimitsStrategy = checkLimitsStrategy;
             return this;
         }
+        
+        public ShipBuilder WithCheckDestroyLimitsStrategy(ShipCheckDestroyLimitsStrategy checkDestroyLimitsStrategy)
+        {
+            _checkDestroyLimitsStrategy = checkDestroyLimitsStrategy;
+            return this;
+        }
 
         public ShipBuilder WithConfiguration(ShipToSpawnConfiguration shipToSpawnConfiguration)
         {
@@ -84,7 +92,8 @@ namespace Code.Ships.Common
                 _shipToSpawnConfiguration.ProjectileId,
                 _shipToSpawnConfiguration.Health,
                 _team,
-                _shipToSpawnConfiguration.Score
+                _shipToSpawnConfiguration.Score,
+                GetCheckDestroyLimitsStrategy()
             );
                 
             // ship.Configure(GetInputStrategy(ship), GetLimitCheckerStrategy(ship));
@@ -95,30 +104,37 @@ namespace Code.Ships.Common
 
         private IInputAdapter GetInputStrategy(ShipMediator shipMediator)
         {
-            if (_inputStrategy == ShipInputStrategy.UseUnityInput)
+            return _inputStrategy switch
             {
-                return new UnityInputAdapter();
-            } 
-            else if (_inputStrategy == ShipInputStrategy.UseAIInput)
-            {
-                return new AIInputAdapter(shipMediator);
-            }
-
-            return null;
+                ShipInputStrategy.UseUnityInput => new UnityInputAdapter(),
+                ShipInputStrategy.UseAIInput => new AIInputAdapter(shipMediator),
+                _ => null
+            };
         }
 
         private ILimitChecker GetLimitCheckerStrategy(ShipMediator shipMediator)
         {
-            if(_checkLimitsStrategy == ShipCheckLimitsStrategy.ViewportLimitChecker)
+            return _checkLimitsStrategy switch
             {
-                return new ViewportLimitChecker(_camera);
-            } 
-            else if (_checkLimitsStrategy == ShipCheckLimitsStrategy.InitialPositionLimitChecker)
-            {
-                return new InitialPositionLimitChecker(shipMediator.transform, 10.0f);
-            }
-
-            return null;
+                ShipCheckLimitsStrategy.ViewportLimitChecker => new ViewportLimitChecker(_camera),
+                ShipCheckLimitsStrategy.InitialPositionLimitChecker => new InitialPositionLimitChecker(
+                    shipMediator.transform, 10.0f),
+                _ => null
+            };
         }
+
+        private ICheckDestroyLimits GetCheckDestroyLimitsStrategy()
+        {
+            return _checkDestroyLimitsStrategy switch
+            {
+                ShipCheckDestroyLimitsStrategy.CheckBottomLimitsStrategy => new CheckBottomLimitsStrategy(),
+                ShipCheckDestroyLimitsStrategy.NotCheckDestroyLimitsStrategy => new NotCheckDestroyLimitsStrategy(),
+                _ => null
+            };
+        }
+        
+
+
+        
     }
 }

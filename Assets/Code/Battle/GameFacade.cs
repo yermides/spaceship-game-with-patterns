@@ -12,12 +12,15 @@ namespace Code.Battle
         [SerializeField] private ShipInstaller shipInstaller;
         [SerializeField] private EnemySpawner enemySpawner;
         [SerializeField] private ScreenFader screenFader;
+        [SerializeField] private GameStateController gameStateController;
 
         [Button("Start Battle (Only for Play Mode testing)")]
 
         public void StartBattle()
         {
             ScoreView.Instance.Reset();
+            gameStateController.Reset();
+            
             shipInstaller.BuildPlayerShip();
             enemySpawner.StartSpawn();
             screenFader.Hide();
@@ -27,7 +30,7 @@ namespace Code.Battle
 
         public void StopBattle()
         {
-            shipInstaller.DestroyPlayerShip();
+            // shipInstaller.DestroyPlayerShip();
             enemySpawner.StopSpawnAndReset();
             screenFader.Show();
         }
@@ -35,7 +38,7 @@ namespace Code.Battle
         public void EndBattle()
         {
             // same as stop, but doesn't show the view back
-            shipInstaller.DestroyPlayerShip();
+            // shipInstaller.DestroyPlayerShip();
             enemySpawner.StopSpawnAndReset();
         }
     }

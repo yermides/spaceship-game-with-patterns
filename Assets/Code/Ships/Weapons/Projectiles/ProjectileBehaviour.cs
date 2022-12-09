@@ -49,7 +49,6 @@ namespace Code.Ships.Weapons.Projectiles
             if (Team == damageable.Team) return;
 
             damageable.TakeDamage(1);
-            Debug.Log("I collided");
             DestroyProjectile();
         }
 

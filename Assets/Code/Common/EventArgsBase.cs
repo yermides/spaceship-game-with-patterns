@@ -1,6 +1,6 @@
 namespace Code.Common
 {
-    public class EventArgsBase
+    public abstract class EventArgsBase
     {
         public EventId EventId { get; }
 

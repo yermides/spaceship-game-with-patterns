@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnConfigurations:
   - shipToSpawnConfiguration:
-    - {fileID: 11400000, guid: dbadace4861db7c4d8c193e534a5c1c1, type: 2}
+    - {fileID: 11400000, guid: b77729e978e518f4dbdca620327bbd4d, type: 2}
     timeToSpawn: 2
   - shipToSpawnConfiguration:
     - {fileID: 11400000, guid: dbadace4861db7c4d8c193e534a5c1c1, type: 2}

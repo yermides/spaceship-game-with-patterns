@@ -17,5 +17,5 @@ MonoBehaviour:
   fireRate: 1
   speed: {x: 6, y: 0, z: 4}
   position: {x: 2, y: 0, z: 2}
-  health: 3
-  score: 22
+  health: 1
+  score: 100

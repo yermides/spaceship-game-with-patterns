@@ -1,6 +1,7 @@
 using System;
 using Code.Battle;
 using Code.Common;
+using Code.Common.Events;
 using Code.Ships.Common;
 using TMPro;
 using UnityEngine;
@@ -21,13 +22,21 @@ namespace Code.UI
         private void Awake()
         {
             _instance = this;
+        }
+
+        private void Start()
+        {
             restartButton.onClick.AddListener(RestartBattle);
             gameOverCanvas.gameObject.SetActive(false);
+            EventQueue.Instance.Subscribe(EventId.ShipDestroyed, this);
+            EventQueue.Instance.Subscribe(EventId.GameOver, this);
         }
 
         private void OnDestroy()
         {
             restartButton.onClick.RemoveListener(RestartBattle);
+            EventQueue.Instance.Unsubscribe(EventId.GameOver, this);
+            EventQueue.Instance.Unsubscribe(EventId.ShipDestroyed, this);
         }
 
         private void RestartBattle()
@@ -36,22 +45,13 @@ namespace Code.UI
             gameOverCanvas.gameObject.SetActive(false);
         }
 
-        public void Show()
-        {
-            gameFacade.EndBattle();
-            gameOverCanvas.gameObject.SetActive(true);
-            scoreText.text = ScoreView.Instance.CurrentScore.ToString();
-        }
-
         public void Process(EventArgsBase args)
         {
-            if (args.EventId != EventId.ShipDestroyed) return;
-
-            var shipDestroyedArgs = (ShipDestroyedEvent)args;
-
-            if (shipDestroyedArgs.team != Teams.Ally) return;
-            
-            Show();
+            if (args.EventId == EventId.GameOver)
+            {
+                gameOverCanvas.gameObject.SetActive(true);
+                scoreText.text = ScoreView.Instance.CurrentScore.ToString();
+            }
         }
     }
 }

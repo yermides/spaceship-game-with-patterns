@@ -15,7 +15,7 @@ MonoBehaviour:
   shipId: {fileID: 11400000, guid: e82f781a76e33364285ec021e6e10937, type: 2}
   projectileId: {fileID: 11400000, guid: a2325d9554879214b990c4cc4e6a3028, type: 2}
   fireRate: 3
-  speed: {x: 2, y: 0, z: 0}
+  speed: {x: 2, y: 0, z: 0.2}
   position: {x: 0, y: 0, z: 0}
   health: 1
   score: 2

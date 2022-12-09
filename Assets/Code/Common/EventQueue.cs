@@ -64,15 +64,16 @@ namespace Code.Common
             _eventsBeingProcessed.Clear();
 
             // if events dispatch new events, be able to process them in the same frame
-            // if (_eventsToProcessNext.Count > 0)
-            // {
-            //     ProcessEvents();
-            // }
+            if (_eventsToProcessNext.Count > 0)
+            {
+                ProcessEvents();
+            }
         }
 
         private void ProcessEvent(EventArgsBase eventArgsBase)
         {
             if (!_eventObservers.TryGetValue(eventArgsBase.EventId, out var eventObserverList)) return;
+            // _eventObservers.TryGetValue(eventArgsBase.EventId, out var eventObserverList);
 
             foreach (var eventObserver in eventObserverList)
             {

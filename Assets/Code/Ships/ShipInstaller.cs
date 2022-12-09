@@ -1,3 +1,5 @@
+using Code.Common;
+using Code.Common.Events;
 using Code.Input;
 using Code.Ships.CheckLimits;
 using Code.Ships.Common;
@@ -20,16 +22,17 @@ namespace Code.Ships
         InitialPositionLimitChecker
     }
 
+    public enum ShipCheckDestroyLimitsStrategy
+    {
+        CheckBottomLimitsStrategy,
+        NotCheckDestroyLimitsStrategy
+    }
+
     public class ShipInstaller : MonoBehaviour
     {
-        // [SerializeField] private ShipMediator shipMediatorReference;
-        // [SerializeField] private ShipInputStrategy shipInputStrategy;
-        // [SerializeField] private 
-        
         [SerializeField, Expandable] private ShipToSpawnConfiguration shipConfiguration;
         [SerializeField, Expandable] private ShipFactoryConfiguration shipsFactoryConfiguration;
         private ShipBuilder _shipBuilder;
-        private ShipMediator _playerShip;
         
         private void Awake()
         {
@@ -42,10 +45,16 @@ namespace Code.Ships
 
             SetInput(_shipBuilder);
             SetCheckLimitsStrategy(_shipBuilder);
+            SetCheckDestroyLimitsStrategy(_shipBuilder);
 
             // BuildPlayerShip();
         }
-        
+
+        private void SetCheckDestroyLimitsStrategy(ShipBuilder shipBuilder)
+        {
+            shipBuilder.WithCheckDestroyLimitsStrategy(ShipCheckDestroyLimitsStrategy.NotCheckDestroyLimitsStrategy);
+        }
+
         private void SetInput(ShipBuilder shipBuilder)
         {
             shipBuilder.WithInputStrategy(ShipInputStrategy.UseUnityInput);
@@ -59,16 +68,7 @@ namespace Code.Ships
         [Button("Build Ship (Only for Play Mode testing)")]
         public void BuildPlayerShip()
         {
-            _playerShip = _shipBuilder.Build();
-        }
-        
-        [Button("Destroy Ship (Only for Play Mode testing)")]
-        
-        public void DestroyPlayerShip()
-        {
-            if (!_playerShip) return;
-            
-            Destroy(_playerShip.gameObject);
+            _shipBuilder.Build();
         }
     }
 }

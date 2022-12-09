@@ -1,5 +1,6 @@
 using System;
 using Code.Common;
+using Code.Common.Events;
 using Code.Ships.Common;
 using TMPro;
 using Unity.VisualScripting;

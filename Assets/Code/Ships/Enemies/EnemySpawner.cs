@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Code.Common;
+using Code.Common.Events;
 using Code.Ships.Common;
 using NaughtyAttributes;
 using UnityEngine;
@@ -8,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Code.Ships.Enemies
 {
-    public class EnemySpawner : MonoBehaviour, IEventObserver
+    public class EnemySpawner : MonoBehaviour
     {
         [SerializeField] private Transform[] possibleSpawnPoints;
         
@@ -22,7 +23,7 @@ namespace Code.Ships.Enemies
         private float _currentTimeInSeconds;
         private int _currentConfigurationIndex;
         private bool _isAbleToSpawn;
-        private Dictionary<int, ShipMediator> _spawnedShipsCache; // Instance Id to 
+        // private Dictionary<int, ShipMediator> _spawnedShipsCache; // Instance Id to 
 
         public void StartSpawn()
         {
@@ -31,12 +32,12 @@ namespace Code.Ships.Enemies
 
         public void StopSpawnAndReset()
         {
-            foreach (var shipMediator in _spawnedShipsCache)
-            {
-                Destroy(shipMediator.Value.gameObject);
-            }
-            
-            _spawnedShipsCache.Clear();
+            // foreach (var shipMediator in _spawnedShipsCache)
+            // {
+            //     Destroy(shipMediator.Value.gameObject);
+            // }
+            //
+            // _spawnedShipsCache.Clear();
 
             _currentTimeInSeconds = 0;
             _currentConfigurationIndex = 0;
@@ -45,9 +46,8 @@ namespace Code.Ships.Enemies
 
         private void Awake()
         {
-            _spawnedShipsCache = new Dictionary<int, ShipMediator>();
+            // _spawnedShipsCache = new Dictionary<int, ShipMediator>();
             _shipFactory = new ShipFactory(Instantiate(shipFactoryConfiguration));
-            EventQueue.Instance.Subscribe(EventId.ShipDestroyed, this);
         }
 
         private void Update()
@@ -59,11 +59,14 @@ namespace Code.Ships.Enemies
             
             var enemyWave = levelConfiguration.SpawnConfigurations[_currentConfigurationIndex];
 
-            if (_currentTimeInSeconds > enemyWave.TimeToSpawn)
+            if (enemyWave.TimeToSpawn > _currentTimeInSeconds) return;
+            
+            SpawnEnemyWave(enemyWave);
+            _currentConfigurationIndex += 1;
+
+            if (_currentConfigurationIndex >= levelConfiguration.SpawnConfigurations.Length)
             {
-                SpawnEnemyWave(enemyWave);
-                _currentConfigurationIndex += 1;
-                _currentTimeInSeconds = 0;
+                EventQueue.Instance.EnqueueEvent(new AllShipsSpawnedEvent());
             }
         }
 
@@ -84,23 +87,37 @@ namespace Code.Ships.Enemies
                     .WithInputStrategy(ShipInputStrategy.UseAIInput)
                     .WithCheckLimitsStrategy(ShipCheckLimitsStrategy.ViewportLimitChecker)
                     .WithTeam(Teams.Enemy)
+                    .WithCheckDestroyLimitsStrategy(ShipCheckDestroyLimitsStrategy.CheckBottomLimitsStrategy)
                     .Build();
                 
-                _spawnedShipsCache.Add(spawnedShip.GetInstanceID(), spawnedShip);
+                EventQueue.Instance.EnqueueEvent(new ShipSpawnedEvent());
             }
         }
-
-        public void Process(EventArgsBase args)
+        
+        /*
+        
+        private void Start()
         {
-            if (args.EventId != EventId.ShipDestroyed) return;
-
-            var shipDestroyedArgs = (ShipDestroyedEvent)args;
-            _spawnedShipsCache.Remove(shipDestroyedArgs.instanceId);
+            EventQueue.Instance.Subscribe(EventId.ShipDestroyed, this);
         }
 
         private void OnDestroy()
         {
             EventQueue.Instance.Unsubscribe(EventId.ShipDestroyed, this);
         }
+        
+        public void Process(EventArgsBase args)
+        {
+            if (args.EventId != EventId.ShipDestroyed) return;
+
+            var shipDestroyedArgs = (ShipDestroyedEvent)args;
+
+            if (shipDestroyedArgs.team != Teams.Enemy) return;
+            
+            // _spawnedShipsCache.Remove(shipDestroyedArgs.instanceId);
+        }
+        
+        */
+        
     }
 }

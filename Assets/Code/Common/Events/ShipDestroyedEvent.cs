@@ -1,7 +1,7 @@
 using Code.Ships.Common;
 using UnityEngine;
 
-namespace Code.Common
+namespace Code.Common.Events
 {
     public class ShipDestroyedEvent : EventArgsBase
     {
@@ -15,7 +15,7 @@ namespace Code.Common
             this.scoreToAdd = scoreToAdd;
             this.instanceId = instanceId;
 
-            Debug.Log($"ShipDestroyedResponse created at frame {Time.frameCount}");
+            Debug.Log($"ShipDestroyedEvent created at frame {Time.frameCount}");
         }
     }
 }
