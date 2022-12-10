@@ -1,10 +1,11 @@
+using Code.Util;
 using UnityEngine;
 
 namespace Code.Common.Events
 {
-    public class AllShipsSpawnedEvent : EventArgsBase
+    public class AllShipsSpawnedEvent : IDispatchedEvent
     {
-        public AllShipsSpawnedEvent() : base(EventId.AllShipsSpawned)
+        public AllShipsSpawnedEvent()
         {
             Debug.Log($"AllShipsSpawnedEvent created at frame {Time.frameCount}");
         }

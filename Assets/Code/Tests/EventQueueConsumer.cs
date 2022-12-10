@@ -6,8 +6,10 @@ using UnityEngine;
 
 namespace Code.Tests
 {
-    public class EventQueueConsumer : MonoBehaviour, IEventObserver
+    [Obsolete]
+    public class EventQueueConsumer : MonoBehaviour
     {
+        /*
         private void OnEnable()
         {
             EventQueue.Instance.Subscribe(EventId.ShipDestroyed, this);
@@ -30,5 +32,6 @@ namespace Code.Tests
         {
             Debug.Log("I am talking when processed");
         }
+        */
     }
 }

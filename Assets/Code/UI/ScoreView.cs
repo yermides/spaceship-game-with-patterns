@@ -2,6 +2,7 @@ using System;
 using Code.Common;
 using Code.Common.Events;
 using Code.Ships.Common;
+using Code.Util;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,7 +10,7 @@ using UnityEngine;
 namespace Code.UI
 {
     [DefaultExecutionOrder(-1)]
-    public class ScoreView : MonoBehaviour, IEventObserver
+    public class ScoreView : MonoBehaviour
     {
         public static ScoreView Instance => _instance;
         private static ScoreView _instance;
@@ -32,12 +33,20 @@ namespace Code.UI
         private void Awake()
         {
             _instance = this;
-            EventQueue.Instance.Subscribe(EventId.ShipDestroyed, this);
+            
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Subscribe<ShipDestroyedEvent>(OnShipDestroyedEvent);
+        }
+
+        private void OnShipDestroyedEvent(ShipDestroyedEvent evt)
+        {
+            AddScore(evt.team, evt.scoreToAdd);
         }
 
         private void OnDestroy()
         {
-            EventQueue.Instance.Unsubscribe(EventId.ShipDestroyed, this);
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Unsubscribe<ShipDestroyedEvent>(OnShipDestroyedEvent);
         }
 
         public void Reset()
@@ -45,19 +54,11 @@ namespace Code.UI
             CurrentScore = 0;
         }
 
-        public void AddScore(Teams killedTeam, int scoreToAdd)
+        private void AddScore(Teams killedTeam, int scoreToAdd)
         {
             if (killedTeam != Teams.Enemy) return;
 
             CurrentScore += scoreToAdd;
-        }
-
-        public void Process(EventArgsBase args)
-        {
-            if (args.EventId != EventId.ShipDestroyed) return;
-
-            var shipDestroyedArgs = (ShipDestroyedEvent)args;
-            AddScore(shipDestroyedArgs.team, shipDestroyedArgs.scoreToAdd);
         }
     }
 }

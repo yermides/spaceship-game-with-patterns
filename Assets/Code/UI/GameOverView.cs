@@ -3,13 +3,14 @@ using Code.Battle;
 using Code.Common;
 using Code.Common.Events;
 using Code.Ships.Common;
+using Code.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Code.UI
 {
-    public class GameOverView : MonoBehaviour, IEventObserver
+    public class GameOverView : MonoBehaviour
     {
         public static GameOverView Instance => _instance;
         private static GameOverView _instance;
@@ -28,30 +29,29 @@ namespace Code.UI
         {
             restartButton.onClick.AddListener(RestartBattle);
             gameOverCanvas.gameObject.SetActive(false);
-            EventQueue.Instance.Subscribe(EventId.ShipDestroyed, this);
-            EventQueue.Instance.Subscribe(EventId.GameOver, this);
+            
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Subscribe<GameOverEvent>(OnGameOverEvent);
+        }
+
+        private void OnGameOverEvent(GameOverEvent evt)
+        {
+            gameOverCanvas.gameObject.SetActive(true);
+            scoreText.text = ScoreView.Instance.CurrentScore.ToString();
         }
 
         private void OnDestroy()
         {
             restartButton.onClick.RemoveListener(RestartBattle);
-            EventQueue.Instance.Unsubscribe(EventId.GameOver, this);
-            EventQueue.Instance.Unsubscribe(EventId.ShipDestroyed, this);
+            
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Unsubscribe<GameOverEvent>(OnGameOverEvent);
         }
 
         private void RestartBattle()
         {
             gameFacade.StartBattle();
             gameOverCanvas.gameObject.SetActive(false);
-        }
-
-        public void Process(EventArgsBase args)
-        {
-            if (args.EventId == EventId.GameOver)
-            {
-                gameOverCanvas.gameObject.SetActive(true);
-                scoreText.text = ScoreView.Instance.CurrentScore.ToString();
-            }
         }
     }
 }

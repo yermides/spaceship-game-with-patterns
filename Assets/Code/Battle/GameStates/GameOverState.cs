@@ -1,6 +1,7 @@
 using System;
 using Code.Common;
 using Code.Common.Events;
+using Code.Util;
 
 namespace Code.Battle.GameStates
 {
@@ -16,7 +17,9 @@ namespace Code.Battle.GameStates
         public void DoStart(Action<GameStateId> endedCallback)
         {
             _gameFacade.EndBattle();
-            EventQueue.Instance.EnqueueEvent(new GameOverEvent());
+
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Enqueue(new GameOverEvent());
         }
 
         public void DoStop()

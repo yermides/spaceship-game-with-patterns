@@ -1,15 +1,16 @@
 using Code.Ships.Common;
+using Code.Util;
 using UnityEngine;
 
 namespace Code.Common.Events
 {
-    public class ShipDestroyedEvent : EventArgsBase
+    public class ShipDestroyedEvent : IDispatchedEvent
     {
         public readonly Teams team;
         public readonly int scoreToAdd;
         public readonly int instanceId;
 
-        public ShipDestroyedEvent(Teams team, int scoreToAdd, int instanceId) : base(EventId.ShipDestroyed)
+        public ShipDestroyedEvent(Teams team, int scoreToAdd, int instanceId)
         {
             this.team = team;
             this.scoreToAdd = scoreToAdd;

@@ -1,10 +1,11 @@
+using Code.Util;
 using UnityEngine;
 
 namespace Code.Common.Events
 {
-    public class GameOverEvent : EventArgsBase
+    public class GameOverEvent : IDispatchedEvent
     {
-        public GameOverEvent() : base(EventId.GameOver)
+        public GameOverEvent()
         {
             Debug.Log($"GameOverEvent created at frame {Time.frameCount}");
         }

@@ -8,21 +8,42 @@ namespace Code.Util
         private static ServiceLocator _instance;
         public static ServiceLocator Instance => _instance ??= new ServiceLocator();
         
-        private Dictionary<Type, object> _registeredServices;
+        private readonly Dictionary<Type, object> _registeredServices;
 
-        public ServiceLocator()
+        private ServiceLocator()
         {
             _registeredServices = new Dictionary<Type, object>();
         }
 
         public T GetService<T>()
         {
-            if (!_registeredServices.TryGetValue(typeof(T), out var service))
+            // throw error if not found
+            if (!_registeredServices.TryGetValue(typeof(T), out var registeredService))
             {
                 throw new Exception("Service not registerer!");
             }
 
-            return (T)service;
+            return (T)registeredService;
+        }
+
+        public void RegisterService<T>(T service)
+        {
+            if (_registeredServices.TryGetValue(typeof(T), out var registeredService))
+            {
+                throw new Exception("Service already registered, you will overwrite it!");
+            }
+
+            _registeredServices.Add(typeof(T), service);
+        }
+
+        public void DeregisterService<T>()
+        {
+            _registeredServices.Remove(typeof(T));
+        }
+
+        private bool Exists<T>()
+        {
+            return _registeredServices.TryGetValue(typeof(T), out _);
         }
     }
 }

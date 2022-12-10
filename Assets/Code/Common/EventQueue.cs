@@ -8,6 +8,7 @@ namespace Code.Common
     [DefaultExecutionOrder(-2)]
     public class EventQueue : MonoBehaviour
     {
+        /*
         private static EventQueue _instance;
         public static EventQueue Instance => _instance;
 
@@ -80,5 +81,6 @@ namespace Code.Common
                 eventObserver.Process(eventArgsBase);
             }
         }
+        */
     }
 }

@@ -7,13 +7,14 @@ using Code.Ships.CheckLimits;
 using Code.Ships.Common;
 using Code.Ships.Weapons;
 using Code.UI;
+using Code.Util;
 using UnityEngine;
 using NaughtyAttributes;
 
 namespace Code.Ships
 {
     [SelectionBase]
-    public class ShipMediator : MonoBehaviour, IShip, IEventObserver
+    public class ShipMediator : MonoBehaviour, IShip
     {
         [SerializeField] private ShipId id;
         [SerializeField] private MovementController movementController;
@@ -56,12 +57,26 @@ namespace Code.Ships
 
         private void Start()
         {
-            EventQueue.Instance.Subscribe(EventId.GameOver, this);
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Subscribe<GameOverEvent>(OnGameOverEvent);
+            eventQueue.Subscribe<VictoryEvent>(OnVictoryEvent);
+        }
+
+        private void OnVictoryEvent(VictoryEvent obj)
+        {
+            Destroy(gameObject);
+        }
+
+        private void OnGameOverEvent(GameOverEvent evt)
+        {
+            Destroy(gameObject);
         }
 
         private void OnDestroy()
         {
-            EventQueue.Instance.Unsubscribe(EventId.GameOver, this);
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Unsubscribe<GameOverEvent>(OnGameOverEvent);
+            eventQueue.Unsubscribe<VictoryEvent>(OnVictoryEvent);
         }
 
         private void FixedUpdate()
@@ -97,13 +112,9 @@ namespace Code.Ships
         private void DestroyShip()
         {
             Destroy(gameObject);
-            EventQueue.Instance.EnqueueEvent(new ShipDestroyedEvent(_team, _score, GetInstanceID()));
-        }
-
-        public void Process(EventArgsBase args)
-        {
-            if (args.EventId != EventId.GameOver) return;
-            Destroy(gameObject);
+            
+            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            eventQueue.Enqueue(new ShipDestroyedEvent(_team, _score, GetInstanceID()));
         }
     }
 }
