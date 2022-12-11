@@ -563,7 +563,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   installers:
   - {fileID: 419734019}
-  sceneToLoad: Scene_Gameplay
+  sceneToLoad: Scene_MainMenu
 --- !u!1 &1046311722
 GameObject:
   m_ObjectHideFlags: 0
