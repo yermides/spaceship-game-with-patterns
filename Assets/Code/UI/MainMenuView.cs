@@ -1,3 +1,6 @@
+using Code.Common.Commands;
+using Code.Util;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,6 +12,7 @@ namespace Code.UI
         [SerializeField] private Button startGameButton;
         [SerializeField] private Button showLeaderboardButton;
         [SerializeField] private Button quitButton;
+        [SerializeField, Scene] private string sceneToLoad;
 
         private void OnEnable()
         {
@@ -26,7 +30,9 @@ namespace Code.UI
 
         private void OnStartButtonPressed()
         {
-            SceneManager.LoadScene("Scene_Gameplay");
+            var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
+            commandQueue.AddAndRunCommand(new LoadSceneCommand(sceneToLoad));
+            // SceneManager.LoadScene("Scene_Gameplay");
         }
         
         private void OnShowLeaderboardButtonPressed()

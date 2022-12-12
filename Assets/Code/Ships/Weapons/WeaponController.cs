@@ -3,6 +3,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using Code.Input;
 using Code.Ships.Common;
+using Code.Util;
 
 namespace Code.Ships.Weapons
 {
@@ -28,7 +29,8 @@ namespace Code.Ships.Weapons
 
         private void Awake()
         {
-            _projectileFactory = new ProjectileFactory(Instantiate(projectileFactoryConfiguration));
+            // _projectileFactory = new ProjectileFactory(Instantiate(projectileFactoryConfiguration));
+            _projectileFactory = ServiceLocator.Instance.GetService<ProjectileFactory>();
         }
 
         public void Configure(IShip ship, float desiredFireRate, ProjectileId defaultProjectileId, Teams team)

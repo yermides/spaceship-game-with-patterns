@@ -27,8 +27,8 @@ namespace Code.Battle
             _idToStates = new Dictionary<GameStateId, IGameState>
             {
                 { GameStateId.Playing , new PlayingState() },
-                { GameStateId.GameOver, new GameOverState(gameFacade) },
-                { GameStateId.Victory, new VictoryState(gameFacade) },
+                { GameStateId.GameOver, new GameOverState() },
+                { GameStateId.Victory, new VictoryState() },
             };
         }
 

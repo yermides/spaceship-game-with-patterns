@@ -18,7 +18,7 @@ namespace Code.Battle
 
         public void StartBattle()
         {
-            ScoreView.Instance.Reset();
+            // ScoreView.Instance.Reset();
             gameStateController.Reset();
             
             shipInstaller.BuildPlayerShip();

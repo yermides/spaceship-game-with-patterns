@@ -7,16 +7,22 @@ namespace Code.Battle.GameStates
 {
     public class VictoryState : IGameState
     {
-        private GameFacade _gameFacade;
+        // private GameFacade _gameFacade;
+
+        public VictoryState()
+        {
+            
+        }
 
         public VictoryState(GameFacade gameFacade)
         {
-            _gameFacade = gameFacade;
+            // _gameFacade = gameFacade;
         }
 
         public void DoStart(Action<GameStateId> endedCallback)
         {
-            _gameFacade.StopBattle();
+            // TODO: must be stopbattlecommand
+            // _gameFacade.StopBattle();
             
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
             eventQueue.Enqueue(new VictoryEvent());

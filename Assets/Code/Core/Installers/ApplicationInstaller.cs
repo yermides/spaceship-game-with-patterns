@@ -1,3 +1,4 @@
+using Code.Common.Commands;
 using Code.Util;
 using NaughtyAttributes;
 using UnityEngine;
@@ -12,11 +13,17 @@ namespace Code.Core.Installers
         
         protected override void InstallAdditionalDependencies()
         {
+            CommandQueue commandQueue = new CommandQueue();
+            ServiceLocator.Instance.RegisterService(commandQueue);
         }
         
         protected override void DoStart()
         {
-            SceneManager.LoadScene(sceneToLoad);
+            var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
+            var loadSceneCommand = new LoadSceneCommand(sceneToLoad);
+            
+            commandQueue.AddAndRunCommand(loadSceneCommand);
+            // SceneManager.LoadScene(sceneToLoad);
         }
     }
 }

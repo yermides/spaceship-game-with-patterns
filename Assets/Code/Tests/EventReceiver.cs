@@ -13,7 +13,7 @@ namespace Code.Tests
             // dispatcher.Subscribe<GenericEvent>(OnGenericEvent);
             
             var queue = ServiceLocator.Instance.GetService<IEventQueue>();
-            queue.Subscribe<SampleEvent>(OnGenericEvent);
+            // queue.Subscribe<SampleEvent>(OnGenericEvent);
         }
 
         private void OnDisable()
@@ -22,12 +22,12 @@ namespace Code.Tests
             // dispatcher.Unsubscribe<GenericEvent>(OnGenericEvent);
             
             var queue = ServiceLocator.Instance.GetService<IEventQueue>();
-            queue.Unsubscribe<SampleEvent>(OnGenericEvent);
+            // queue.Unsubscribe<SampleEvent>(OnGenericEvent);
         }
 
-        private void OnGenericEvent(SampleEvent signal)
-        {
-            Debug.Log($"I am answering to Generic event (once again) at frame {Time.frameCount}");
-        }
+        // private void OnGenericEvent(SampleEvent signal)
+        // {
+        //     Debug.Log($"I am answering to Generic event (once again) at frame {Time.frameCount}");
+        // }
     }
 }

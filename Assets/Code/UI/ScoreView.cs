@@ -1,20 +1,13 @@
-using System;
-using Code.Common;
 using Code.Common.Events;
 using Code.Ships.Common;
 using Code.Util;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Code.UI
 {
-    [DefaultExecutionOrder(-1)]
     public class ScoreView : MonoBehaviour
     {
-        public static ScoreView Instance => _instance;
-        private static ScoreView _instance;
-        
         [SerializeField] private TextMeshProUGUI scoreText;
         private int _currentScore;
 
@@ -26,14 +19,12 @@ namespace Code.UI
                 _currentScore = value;
 
                 if (!scoreText) return;
-                scoreText.text = $"Score: {value}";
+                scoreText.text = $"{value}";
             }
         }
 
-        private void Awake()
+        private void Start()
         {
-            _instance = this;
-            
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
             eventQueue.Subscribe<ShipDestroyedEvent>(OnShipDestroyedEvent);
         }

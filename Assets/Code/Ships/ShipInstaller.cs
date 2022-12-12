@@ -4,6 +4,7 @@ using Code.Input;
 using Code.Ships.CheckLimits;
 using Code.Ships.Common;
 using Code.Ships.Enemies;
+using Code.Util;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -31,13 +32,13 @@ namespace Code.Ships
     public class ShipInstaller : MonoBehaviour
     {
         [SerializeField, Expandable] private ShipToSpawnConfiguration shipConfiguration;
-        [SerializeField, Expandable] private ShipFactoryConfiguration shipsFactoryConfiguration;
         private ShipBuilder _shipBuilder;
         
         private void Awake()
         {
-            var shipFactory = new ShipFactory(Instantiate(shipsFactoryConfiguration));
-            
+            // var shipFactory = new ShipFactory(Instantiate(shipsFactoryConfiguration));
+            var shipFactory = ServiceLocator.Instance.GetService<ShipFactory>();
+
             _shipBuilder = shipFactory
                 .Create(shipConfiguration.ShipId)
                 .WithTeam(Teams.Ally)

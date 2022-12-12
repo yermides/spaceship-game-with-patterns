@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace Code.UI
 {
+    [Obsolete]
     public class MenuController : MonoBehaviour
     {
         [SerializeField] private GameFacade gameFacade;
