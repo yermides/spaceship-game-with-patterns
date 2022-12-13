@@ -3,27 +3,32 @@ using Code.Common.Commands;
 using Code.Common.Events;
 using Code.Util;
 using NaughtyAttributes;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Code.UI
 {
-    public class VictoryView : MonoBehaviour, IEventReceiver<VictoryEvent>
+    public class VictoryView : MonoBehaviour, IView
     {
         [SerializeField] private Button restartButton;
         [SerializeField] private Button backToMenuButton;
-        [SerializeField, Scene] private string sceneToLoad;
+        [SerializeField] private TextMeshProUGUI scoreText;
+        private InGameMenuMediator _mediator;
 
+        public void Configure(InGameMenuMediator mediator)
+        {
+            _mediator = mediator;
+        }
+        
         private void Start()
         {
-            gameObject.SetActive(false);
-
             restartButton.onClick.AddListener(RestartGame);
             backToMenuButton.onClick.AddListener(GoBackToMainMenu);
 
-            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            eventQueue.Subscribe<VictoryEvent>(OnEvent);
+            // var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            // eventQueue.Subscribe<VictoryEvent>(OnEvent);
         }
 
         private void OnDestroy()
@@ -31,8 +36,8 @@ namespace Code.UI
             restartButton.onClick.RemoveListener(RestartGame);
             backToMenuButton.onClick.RemoveListener(GoBackToMainMenu);
 
-            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            eventQueue.Unsubscribe<VictoryEvent>(OnEvent);
+            // var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            // eventQueue.Unsubscribe<VictoryEvent>(OnEvent);
         }
 
         private void UnsubscribeButtons()
@@ -43,25 +48,40 @@ namespace Code.UI
 
         private void RestartGame()
         {
-            UnsubscribeButtons();
+            _mediator.OnRestartPressed();
             
-            var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
-            var loadSceneCommand = new LoadSceneCommand(SceneManager.GetActiveScene().name);
-            commandQueue.AddAndRunCommand(loadSceneCommand);
+            // UnsubscribeButtons();
+            //
+            // var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
+            // var loadSceneCommand = new LoadSceneCommand(SceneManager.GetActiveScene().name);
+            // commandQueue.AddAndRunCommand(loadSceneCommand);
         }
 
         private void GoBackToMainMenu()
         {
-            UnsubscribeButtons();
-            
-            var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
-            var loadSceneCommand = new LoadSceneCommand(sceneToLoad);
-            commandQueue.AddAndRunCommand(loadSceneCommand);
+            _mediator.OnBackToMenuPressed();
+            // UnsubscribeButtons();
+            //
+            // var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
+            // var loadSceneCommand = new LoadSceneCommand(sceneToLoad);
+            // commandQueue.AddAndRunCommand(loadSceneCommand);
         }
 
-        public void OnEvent(VictoryEvent signal)
+        // public void OnEvent(VictoryEvent signal)
+        // {
+        //     Show();
+        // }
+
+        public void Show()
         {
+            var score = ServiceLocator.Instance.GetService<ScoreView>().CurrentScore;
+            scoreText.text = $"Score: {score}";
             gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

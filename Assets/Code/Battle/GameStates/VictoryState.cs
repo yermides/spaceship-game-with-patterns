@@ -1,5 +1,6 @@
 using System;
 using Code.Common;
+using Code.Common.Commands;
 using Code.Common.Events;
 using Code.Util;
 
@@ -7,24 +8,12 @@ namespace Code.Battle.GameStates
 {
     public class VictoryState : IGameState
     {
-        // private GameFacade _gameFacade;
-
-        public VictoryState()
-        {
-            
-        }
-
-        public VictoryState(GameFacade gameFacade)
-        {
-            // _gameFacade = gameFacade;
-        }
-
         public void DoStart(Action<GameStateId> endedCallback)
         {
-            // TODO: must be stopbattlecommand
-            // _gameFacade.StopBattle();
-            
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
+            
+            commandQueue.AddAndRunCommand(new StopBattleCommand());
             eventQueue.Enqueue(new VictoryEvent());
         }
 

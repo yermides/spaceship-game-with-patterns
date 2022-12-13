@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Code.Battle
 {
+    [Obsolete]
     public class GameFacade : MonoBehaviour
     {
         [SerializeField] private ShipInstaller shipInstaller;

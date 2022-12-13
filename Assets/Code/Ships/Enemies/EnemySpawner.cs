@@ -39,7 +39,6 @@ namespace Code.Ships.Enemies
 
         private void Awake()
         {
-            // _shipFactory = new ShipFactory(Instantiate(shipFactoryConfiguration));
             _shipFactory = ServiceLocator.Instance.GetService<ShipFactory>();
         }
 

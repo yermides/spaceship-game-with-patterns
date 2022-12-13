@@ -15,6 +15,8 @@ namespace Code.Battle.GameStates
         public void DoStart(Action<GameStateId> endedCallback)
         {
             _endedCallback = endedCallback;
+            _shipsAliveCount = 0;
+            _haveAllShipsSpawned = false;
             
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
             eventQueue.Subscribe<ShipDestroyedEvent>(OnShipDestroyed);

@@ -1,35 +1,29 @@
-using System;
-using Code.Battle;
-using Code.Common;
-using Code.Common.Commands;
-using Code.Common.Events;
-using Code.Ships.Common;
 using Code.Util;
-using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Code.UI
 {
-    public class GameOverView : MonoBehaviour
+    public class GameOverView : MonoBehaviour, IView
     {
-        // [SerializeField] private Canvas gameOverCanvas;
-        // [SerializeField] private GameFacade gameFacade;
         [SerializeField] private Button restartButton;
         [SerializeField] private Button backToMenuButton;
         [SerializeField] private TextMeshProUGUI scoreText;
-        [SerializeField, Scene] private string sceneToLoad;
+        private InGameMenuMediator _mediator;
+
+        public void Configure(InGameMenuMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         private void Start()
         {
-            gameObject.SetActive(false);
             restartButton.onClick.AddListener(RestartGame);
             backToMenuButton.onClick.AddListener(GoBackToMainMenu);
 
-            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            eventQueue.Subscribe<GameOverEvent>(OnGameOverEvent);
+            // var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            // eventQueue.Subscribe<GameOverEvent>(OnGameOverEvent);
         }
         
         private void UnsubscribeButtons()
@@ -40,38 +34,53 @@ namespace Code.UI
         
         private void RestartGame()
         {
-            // TODO: use menu mediator pls
-            UnsubscribeButtons();
+            _mediator.OnRestartPressed();
             
-            var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
-            var loadSceneCommand = new LoadSceneCommand(SceneManager.GetActiveScene().name);
-            commandQueue.AddAndRunCommand(loadSceneCommand);
+            // UnsubscribeButtons();
+            //
+            // var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
+            // var loadSceneCommand = new LoadSceneCommand(SceneManager.GetActiveScene().name);
+            // commandQueue.AddAndRunCommand(loadSceneCommand);
         }
 
         private void GoBackToMainMenu()
         {
-            UnsubscribeButtons();
-
-            var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
-            var loadSceneCommand = new LoadSceneCommand(sceneToLoad);
-            commandQueue.AddAndRunCommand(loadSceneCommand);
-        }
-
-        private void OnGameOverEvent(GameOverEvent evt)
-        {
-            gameObject.SetActive(true);
+            _mediator.OnBackToMenuPressed();
             
-            var currentScore = ServiceLocator.Instance.GetService<ScoreView>().CurrentScore;
-            scoreText.text = $"Score: {currentScore}";
+            // UnsubscribeButtons();
+            //
+            // var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
+            // var loadSceneCommand = new LoadSceneCommand(sceneToLoad);
+            // commandQueue.AddAndRunCommand(loadSceneCommand);
         }
+
+        // private void OnGameOverEvent(GameOverEvent evt)
+        // {
+        //     Show();
+        //     
+        //     var currentScore = ServiceLocator.Instance.GetService<ScoreView>().CurrentScore;
+        //     scoreText.text = $"Score: {currentScore}";
+        // }
 
         private void OnDestroy()
         {
             restartButton.onClick.RemoveListener(RestartGame);
             backToMenuButton.onClick.RemoveListener(GoBackToMainMenu);
 
-            var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            eventQueue.Unsubscribe<GameOverEvent>(OnGameOverEvent);
+            // var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
+            // eventQueue.Unsubscribe<GameOverEvent>(OnGameOverEvent);
+        }
+        
+        public void Show()
+        {
+            var score = ServiceLocator.Instance.GetService<ScoreView>().CurrentScore;
+            scoreText.text = $"Score: {score}";
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
