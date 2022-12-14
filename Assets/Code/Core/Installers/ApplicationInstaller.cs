@@ -1,8 +1,10 @@
 using Code.Common.Commands;
+using Code.Common.Score;
+using Code.Core.DataStorage;
+using Code.Core.Serializers;
 using Code.Util;
 using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Code.Core.Installers
 {
@@ -13,8 +15,13 @@ namespace Code.Core.Installers
         
         protected override void InstallAdditionalDependencies()
         {
-            CommandQueue commandQueue = new CommandQueue();
+            var commandQueue = new CommandQueue();
             ServiceLocator.Instance.RegisterService(commandQueue);
+            
+            var serializer = new JsonUtilityAdapter();
+            var dataStorage = new PlayerPrefsAdapter(serializer);
+            var scoreSystem = new ScoreSystemImpl(dataStorage);
+            ServiceLocator.Instance.RegisterService<IScoreSystem>(scoreSystem);
         }
         
         protected override void DoStart()
@@ -23,7 +30,6 @@ namespace Code.Core.Installers
             var loadSceneCommand = new LoadSceneCommand(sceneToLoad);
             
             commandQueue.AddAndRunCommand(loadSceneCommand);
-            // SceneManager.LoadScene(sceneToLoad);
         }
     }
 }

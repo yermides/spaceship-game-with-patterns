@@ -14,12 +14,8 @@ namespace Code.Battle
 
     public class GameStateController : MonoBehaviour
     {
-        [SerializeField] 
-        private GameFacade gameFacade;
-        
-        private IGameState _currentGameState;
-
         private Dictionary<GameStateId, IGameState> _idToStates;
+        private IGameState _currentGameState;
 
         private void Awake()
         {

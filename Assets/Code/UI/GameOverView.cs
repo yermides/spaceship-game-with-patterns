@@ -21,9 +21,6 @@ namespace Code.UI
         {
             restartButton.onClick.AddListener(RestartGame);
             backToMenuButton.onClick.AddListener(GoBackToMainMenu);
-
-            // var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            // eventQueue.Subscribe<GameOverEvent>(OnGameOverEvent);
         }
         
         private void UnsubscribeButtons()
@@ -35,40 +32,17 @@ namespace Code.UI
         private void RestartGame()
         {
             _mediator.OnRestartPressed();
-            
-            // UnsubscribeButtons();
-            //
-            // var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
-            // var loadSceneCommand = new LoadSceneCommand(SceneManager.GetActiveScene().name);
-            // commandQueue.AddAndRunCommand(loadSceneCommand);
         }
 
         private void GoBackToMainMenu()
         {
             _mediator.OnBackToMenuPressed();
-            
-            // UnsubscribeButtons();
-            //
-            // var commandQueue = ServiceLocator.Instance.GetService<CommandQueue>();
-            // var loadSceneCommand = new LoadSceneCommand(sceneToLoad);
-            // commandQueue.AddAndRunCommand(loadSceneCommand);
         }
-
-        // private void OnGameOverEvent(GameOverEvent evt)
-        // {
-        //     Show();
-        //     
-        //     var currentScore = ServiceLocator.Instance.GetService<ScoreView>().CurrentScore;
-        //     scoreText.text = $"Score: {currentScore}";
-        // }
 
         private void OnDestroy()
         {
             restartButton.onClick.RemoveListener(RestartGame);
             backToMenuButton.onClick.RemoveListener(GoBackToMainMenu);
-
-            // var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            // eventQueue.Unsubscribe<GameOverEvent>(OnGameOverEvent);
         }
         
         public void Show()
