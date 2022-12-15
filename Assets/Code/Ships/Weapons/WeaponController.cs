@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using NaughtyAttributes;
 using Code.Input;
 using Code.Ships.Common;
+using Code.Ships.Weapons.Projectiles;
 using Code.Util;
 
 namespace Code.Ships.Weapons
@@ -14,6 +18,7 @@ namespace Code.Ships.Weapons
         [SerializeField, Expandable] private ProjectileFactoryConfiguration projectileFactoryConfiguration;
         [SerializeField] private float fireRate = 0.5f;
         private ProjectileFactory _projectileFactory;
+        private List<ProjectileBehaviour> _projectileBehaviourInstances;
 
         [SerializeField] private ProjectileId projectileToShoot;
         // private float _remainingSecondsToFire;
@@ -31,6 +36,7 @@ namespace Code.Ships.Weapons
         {
             // _projectileFactory = new ProjectileFactory(Instantiate(projectileFactoryConfiguration));
             _projectileFactory = ServiceLocator.Instance.GetService<ProjectileFactory>();
+            _projectileBehaviourInstances = new List<ProjectileBehaviour>();
         }
 
         public void Configure(IShip ship, float desiredFireRate, ProjectileId defaultProjectileId, Teams team)
@@ -57,11 +63,32 @@ namespace Code.Ships.Weapons
 
         private void Fire()
         {
-            _projectileFactory.Create(currentSelectedProjectileId, firingPoint.position, firingPoint.rotation, _team);
+            // Instantiate and cache the projectile
             // _projectileFactory.Create(testProjectileId, firingPoint.position, firingPoint.rotation);
             
+            var projectile = _projectileFactory.Create(currentSelectedProjectileId, firingPoint.position, firingPoint.rotation, _team);
+            projectile.onDestroyCallback += OnProjectileDestroyed;
+            _projectileBehaviourInstances.Add(projectile);
+
+            // On firing, start cooldown
             _isAbleToFire = false;
             StartCoroutine(FiringCooldownCoroutine());
+        }
+
+        private void OnProjectileDestroyed(ProjectileBehaviour projectileBehaviour)
+        {
+            _projectileBehaviourInstances.Remove(projectileBehaviour);
+            projectileBehaviour.onDestroyCallback -= OnProjectileDestroyed;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var projectileBehaviourInstance in _projectileBehaviourInstances)
+            {
+                Destroy(projectileBehaviourInstance.gameObject);
+            }
+            
+            _projectileBehaviourInstances.Clear();
         }
     }
 }

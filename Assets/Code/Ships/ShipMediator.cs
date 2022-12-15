@@ -14,7 +14,8 @@ using NaughtyAttributes;
 namespace Code.Ships
 {
     [SelectionBase]
-    public class ShipMediator : MonoBehaviour, IShip
+    public class ShipMediator : MonoBehaviour, IShip,
+        IEventReceiver<VictoryEvent>, IEventReceiver<GameOverEvent>, IEventReceiver<RestartEvent>
     {
         [SerializeField] private ShipId id;
         [SerializeField] private MovementController movementController;
@@ -58,25 +59,17 @@ namespace Code.Ships
         private void Start()
         {
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            eventQueue.Subscribe<GameOverEvent>(OnGameOverEvent);
-            eventQueue.Subscribe<VictoryEvent>(OnVictoryEvent);
-        }
-
-        private void OnVictoryEvent(VictoryEvent obj)
-        {
-            Destroy(gameObject);
-        }
-
-        private void OnGameOverEvent(GameOverEvent evt)
-        {
-            Destroy(gameObject);
+            eventQueue.Subscribe<GameOverEvent>(OnEvent);
+            eventQueue.Subscribe<VictoryEvent>(OnEvent);
+            eventQueue.Subscribe<RestartEvent>(OnEvent);
         }
 
         private void OnDestroy()
         {
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
-            eventQueue.Unsubscribe<GameOverEvent>(OnGameOverEvent);
-            eventQueue.Unsubscribe<VictoryEvent>(OnVictoryEvent);
+            eventQueue.Unsubscribe<GameOverEvent>(OnEvent);
+            eventQueue.Unsubscribe<VictoryEvent>(OnEvent);
+            eventQueue.Unsubscribe<RestartEvent>(OnEvent);
         }
 
         private void FixedUpdate()
@@ -87,8 +80,13 @@ namespace Code.Ships
         private void Update()
         {
             _direction = _inputAdapter.GetDirection();
+            
             TryFiring();
+            TryCheckDestroyLimits();
+        }
 
+        private void TryCheckDestroyLimits()
+        {
             if (_checkDestroyLimits.IsWithinLimits(_transform.position)) return;
             
             DestroyShip();
@@ -115,6 +113,21 @@ namespace Code.Ships
             
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
             eventQueue.Enqueue(new ShipDestroyedEvent(_team, _score, GetInstanceID()));
+        }
+
+        public void OnEvent(VictoryEvent signal)
+        {
+            Destroy(gameObject);
+        }
+
+        public void OnEvent(GameOverEvent signal)
+        {
+            Destroy(gameObject);
+        }
+
+        public void OnEvent(RestartEvent signal)
+        {
+            Destroy(gameObject);
         }
     }
 }

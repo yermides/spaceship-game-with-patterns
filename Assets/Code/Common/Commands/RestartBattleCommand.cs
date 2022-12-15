@@ -11,6 +11,8 @@ namespace Code.Common.Commands
             var eventQueue = ServiceLocator.Instance.GetService<IEventQueue>();
             
             eventQueue.Enqueue(new RestartEvent());
+
+            await Task.Yield();
             await new StopBattleCommand().Execute();
             await new StartBattleCommand().Execute();
         }

@@ -20,6 +20,8 @@ namespace Code.Ships.Weapons.Projectiles
         [ShowNonSerializedField]
         private Teams _team;
 
+        public event Action<ProjectileBehaviour> onDestroyCallback;
+
         public string Id => id.Value;
 
         public void Configure(Teams team)
@@ -67,6 +69,12 @@ namespace Code.Ships.Weapons.Projectiles
         public void TakeDamage(int amount)
         {
             DestroyProjectile();
+        }
+
+        private void OnDestroy()
+        {
+            onDestroyCallback?.Invoke(this);
+            onDestroyCallback = null;
         }
 
         public Teams Team => _team;

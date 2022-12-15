@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Code.Common.Score;
 using Code.Util;

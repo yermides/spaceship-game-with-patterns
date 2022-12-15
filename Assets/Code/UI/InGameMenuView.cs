@@ -1,4 +1,3 @@
-using System;
 using Code.Common.Commands;
 using Code.Common.Events;
 using Code.Util;
@@ -68,11 +67,11 @@ namespace Code.UI
 
         public void OnBackToMenuPressed()
         {
-            // resume the time
-            _commandQueue.AddAndRunCommand(new ResumeGameCommand());
-            
             // load menu scene
             _commandQueue.AddAndRunCommand(new LoadSceneCommand(menuScene));
+            
+            // resume the time
+            _commandQueue.AddAndRunCommand(new ResumeGameCommand());
         }
 
         public void OnResumePressed()
@@ -92,11 +91,11 @@ namespace Code.UI
             UnsubscribeAll();
             SubscribeAll();
             
+            // restart the game
+            _commandQueue.AddAndRunCommand(new RestartBattleCommand());
+            
             // resume the time
             _commandQueue.AddAndRunCommand(new ResumeGameCommand());
-            
-            // restart the game 
-            _commandQueue.AddAndRunCommand(new RestartBattleCommand());
         }
 
 

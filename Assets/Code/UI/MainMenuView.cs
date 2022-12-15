@@ -1,9 +1,7 @@
-using System;
 using Code.Common.Commands;
 using Code.Util;
 using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Code.UI
