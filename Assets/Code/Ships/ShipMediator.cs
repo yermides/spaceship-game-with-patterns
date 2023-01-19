@@ -1,15 +1,10 @@
-using System;
-using Code.Common;
 using Code.Common.Events;
 using Code.Input;
 using Code.Ships.CheckDestroyLimits;
-using Code.Ships.CheckLimits;
 using Code.Ships.Common;
 using Code.Ships.Weapons;
-using Code.UI;
 using Code.Util;
 using UnityEngine;
-using NaughtyAttributes;
 
 namespace Code.Ships
 {

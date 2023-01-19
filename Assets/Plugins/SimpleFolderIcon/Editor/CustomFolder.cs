@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace SimpleFolderIcon.Editor
 {
+    #if UNITY_EDITOR
+    
     [InitializeOnLoad]
     public class CustomFolder
     {
@@ -50,4 +52,5 @@ namespace SimpleFolderIcon.Editor
             GUI.DrawTexture(imageRect, texture);
         }
     }
+    #endif
 }
